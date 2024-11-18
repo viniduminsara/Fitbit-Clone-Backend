@@ -1,4 +1,4 @@
-interface GoalDTO {
+interface IGoalDTO {
     exerciseDays: number;
     steps: number;
     distance: number;

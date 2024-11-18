@@ -9,7 +9,7 @@ export class UserResponseDTO {
     height!: number;
     weight!: number;
     createdAt!: Date;
-    goals!: GoalDTO;
+    goals!: IGoalDTO;
 
     static toResponse(user: IUser): UserResponseDTO {
         const userDTO = new UserResponseDTO();
