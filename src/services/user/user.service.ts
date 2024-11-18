@@ -57,7 +57,6 @@ export const createNewUser = async (
         throw new InternalServerErrorException(ErrorMessages.CreateFail);
     }
 
-
     return UserResponseDTO.toResponse(existingUser);
 };
 
