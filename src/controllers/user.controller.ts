@@ -6,13 +6,13 @@ import {
     createUserValidator,
     getUserByIdValidator,
     updateUserValidator,
-} from '../shared/middlewares/user-validator.middleware';
+} from '../shared/middlewares/validators/user-validator.middleware';
 
 const controller = Router();
 
 controller
 
-    // POST /api/mongoose/users
+    // POST /api/v1/users
     .post(
         '/',
         createUserValidator,
@@ -22,7 +22,7 @@ controller
         })
     )
 
-    // GET /api/mongoose/users
+    // GET /api/v1/users
     .get(
         '/',
         asyncHandler(async (req: Request, res: Response) => {
@@ -31,7 +31,7 @@ controller
         })
     )
 
-    // GET /api/mongoose/users/:id
+    // GET /api/v1/users/:id
     .get(
         '/:uid',
         getUserByIdValidator,
@@ -41,7 +41,7 @@ controller
         })
     )
 
-    // PATCH /api/mongoose/users/:id
+    // PATCH /api/v1/users/:id
     .patch(
         '/:uid',
         getUserByIdValidator,
@@ -52,7 +52,7 @@ controller
         })
     )
 
-    // DELETE /api/mongoose/users:id
+    // DELETE /api/v1/users:id
     .delete(
         '/:id',
         getUserByIdValidator,
