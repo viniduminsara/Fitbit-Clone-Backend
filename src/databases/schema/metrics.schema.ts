@@ -1,9 +1,13 @@
-import {Schema, model} from 'mongoose';
+import mongoose, {Schema, model} from 'mongoose';
 import {IActivity} from "../model/activity.model";
-import {IDailyMetrics} from "../model/dailyMetrics.model";
+import {IMetrics} from "../model/metrics.model";
 
-const schema = new Schema<IDailyMetrics>(
+const schema = new Schema<IMetrics>(
     {
+        uid: {
+            type: String,
+            required: true,
+        },
         date: {
             type: Date,
             required: true
@@ -19,11 +23,17 @@ const schema = new Schema<IDailyMetrics>(
         caloriesBurned: {
             type: Number,
             required: true,
-        }
+        },
+        activities: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Activity'
+            }
+        ]
     },
     {
         timestamps: true,
     }
 );
 
-export default model<IDailyMetrics>('activity', schema);
+export default model<IMetrics>('Metric', schema);

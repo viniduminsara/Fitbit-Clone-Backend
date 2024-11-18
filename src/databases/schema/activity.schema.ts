@@ -16,15 +16,15 @@ const schema = new Schema<IActivity>(
             type: String,
             required: true,
         },
-        steps: {
+        activitySteps: {
             type: Number,
             required: true,
         },
-        distance: {
+        activityDistance: {
             type: Number,
             required: true,
         },
-        caloriesBurned: {
+        activityCaloriesBurned: {
             type: Number,
             required: true,
         }
@@ -34,4 +34,4 @@ const schema = new Schema<IActivity>(
     }
 );
 
-export default model<IActivity>('activity', schema);
+export default model<IActivity>('Activity', schema);
