@@ -1,26 +1,25 @@
 import {Express, Request, Response} from 'express';
-import UsersRouter from '../controllers/user.controller';
 import responseInterceptor from '../shared/middlewares/response-interceptor';
 import {exceptionHandler} from '../shared/middlewares/exception-handling.middleware';
 import {pageNotFoundExceptionHandler} from '../shared/middlewares/page-not-found-exception-handler.middleware';
+import UsersRouter from '../controllers/user.controller';
+import MetricsController from "../controllers/metrics.controller";
 
 const routerSetup = (app: Express) =>
     app
 
         .get('/', async (req: Request, res: Response) => {
-            res.send('Hello Express APIvantage!');
+            res.send('Hello from Fitbit-Clone-Backend');
         })
 
-        // place interceptor above all routes that you want to intercept
-        // interceptor will trigger for every request
         .use(responseInterceptor)
         .use('/api/v1/users', UsersRouter)
+        .use('/api/v1/metrics', MetricsController)
 
-        // asterisk handles all request paths, but because the order maters,
-        // it will ignore route paths that came before
+        //not found handler
         .use('*', pageNotFoundExceptionHandler)
 
-        // The exception handling middleware is the last one in the pipeline
+        // The exception handling middleware
         .use(exceptionHandler)
 
 export default routerSetup;
