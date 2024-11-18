@@ -4,7 +4,7 @@ export interface IActivity extends Document {
     activityType: string;
     date: Date,
     startTime: string;
-    steps: number;
-    distance: number;
-    caloriesBurned: number;
+    activitySteps: number;
+    activityDistance: number;
+    activityCaloriesBurned: number;
 }
