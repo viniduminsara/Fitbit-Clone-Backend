@@ -1,27 +1,21 @@
 import Joi from "joi";
 
 export const updateMetricsValidationSchema = Joi.object({
-    uid: Joi.string().alphanum().required()
-        .messages({
-            'string.alphanum': 'UID must be alphanumeric.',
-            'string.length': 'UID must be 28 characters long.',
-            'any.required': 'UID is required.',
-        }),
-    steps: Joi.number().integer().min(1000).max(50000).required()
+    steps: Joi.number().integer().min(0).max(50000).required()
         .messages({
             'number.base': 'Steps must be a number.',
             'number.min': 'Steps must be at least 1000.',
             'number.max': 'Steps must be at most 50000.',
             'any.required': 'Steps goal is required.',
         }),
-    distance: Joi.number().positive().min(1).max(100).required()
+    distance: Joi.number().min(0).max(50000).required()
         .messages({
             'number.base': 'Distance must be a number.',
             'number.min': 'Distance must be at least 1 km.',
             'number.max': 'Distance must be at most 100 km.',
             'any.required': 'Distance goal is required.',
         }),
-    caloriesBurned: Joi.number().positive().min(500).max(5000).required()
+    caloriesBurned: Joi.number().min(0).max(50000).required()
         .messages({
             'number.base': 'Energy burned must be a number.',
             'number.min': 'Energy burned must be at least 500 calories.',

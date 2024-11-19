@@ -10,7 +10,7 @@ const controller = Router();
 
 controller
 
-    // GET /api/v1/users/:id
+    // GET /api/v1/metrics/:id
     .get(
         '/:uid',
         getMetricsByIdValidator,
@@ -26,7 +26,7 @@ controller
         updateMetricsValidator,
         asyncHandler(async (req: Request, res: Response) => {
             const updatedMetrics = await metricsService.updateMetrics(req.params.uid, req.body);
-            res.status(201).send(updatedMetrics);
+            res.send(updatedMetrics);
         })
     )
 

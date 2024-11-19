@@ -25,7 +25,7 @@ export const retrieveMetricsById = async (
         })
             .populate('activities')
             .sort({ date: 1 })
-            .lean(); // Convert to plain objects
+            .lean();
 
         const result: MetricsResponseDTO[] = [];
         for (let i = 0; i < 7; i++) {
@@ -53,7 +53,7 @@ export const retrieveMetricsById = async (
             }
         }
 
-        return result;
+        return result.reverse();
     } catch (error) {
         console.error('Error retrieving metrics:', error);
         throw new Error('Failed to retrieve metrics');
@@ -64,22 +64,35 @@ export const updateMetrics = async (
     uid: string,
     data: Partial<IMetrics>
 ): Promise<MetricsResponseDTO> => {
-    const [error, updatedMetrics] = await to(MetricModel.findOneAndUpdate(
-        {uid: uid},
-        {$set: {...data}},
-        {new: true}
-    ).populate('activities'));
+    const today = new Date();
 
-    if (!updatedMetrics) {
-        throw new NotFoundException(`User with id: ${uid} was not found!`);
-    }
+    const [error, updatedMetrics] = await to(
+        MetricModel.findOneAndUpdate(
+            {
+                uid,
+                $expr: {
+                    $eq: [
+                        { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
+                        today.toISOString().split("T")[0],
+                    ],
+                },
+            },
+            { $set: { ...data } },
+            { new: true }
+        ).populate('activities')
+    );
 
     if (error) {
         throw new InternalServerErrorException(ErrorMessages.UpdateFail);
     }
 
+    if (!updatedMetrics) {
+        throw new NotFoundException(`Metrics for user with id: ${uid} were not found!`);
+    }
+
     return MetricsResponseDTO.toResponse(updatedMetrics);
 };
+
 
 export const saveActivity = async (
     uid: string,
@@ -94,7 +107,7 @@ export const saveActivity = async (
 
     if (!data.date) throw new InternalServerErrorException(ErrorMessages.CreateFail);
 
-    const activityDate = new Date(data.date).toISOString().split('T')[0]; // Extract date in YYYY-MM-DD format
+    const activityDate = new Date(data.date).toISOString().split('T')[0];
 
     // Step 1: Find the metric by uid and date (ignoring time)
     const [findError, metric] = await to(
@@ -113,16 +126,19 @@ export const saveActivity = async (
 
     // Step 2: Update or create the metric
     if (metric) {
+        metric.steps += savedActivity.activitySteps || 0;
+        metric.distance += savedActivity.activityDistance || 0;
+        metric.caloriesBurned += savedActivity.activityCaloriesBurned || 0;
         metric.activities.push(savedActivity._id);
         await metric.save();
     } else {
         const [createError] = await to(
             MetricModel.create({
                 uid,
-                date: new Date(activityDate), // Save date with time set to 00:00:00
-                steps: 0,
-                distance: 0,
-                caloriesBurned: 0,
+                date: new Date(activityDate),
+                steps: savedActivity.activitySteps || 0,
+                distance: savedActivity.activityDistance || 0,
+                caloriesBurned: savedActivity.activityCaloriesBurned || 0,
                 activities: [savedActivity._id],
             })
         );

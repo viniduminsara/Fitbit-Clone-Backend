@@ -52,6 +52,16 @@ controller
         })
     )
 
+    // PATCH /api/v1/users/:id
+    .patch(
+        '/:uid/goals',
+        updateUserValidator,
+        asyncHandler(async (req: Request, res: Response) => {
+            const updatedUser = await userService.updateUserGoals(req.params.uid, req.body);
+            res.send(updatedUser);
+        })
+    )
+
     // DELETE /api/v1/users:id
     .delete(
         '/:id',

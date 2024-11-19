@@ -12,6 +12,7 @@ import {
 } from '../../shared/exceptions/http.exceptions';
 import {UserResponseDTO} from '../../shared/models/DTO/userDTO';
 import {IMongooseError} from '../../shared/models/extensions/errors.extension';
+import {IGoal} from "../../databases/model/goal.model";
 
 // POST /api/v1/users
 export const createNewUser = async (
@@ -51,7 +52,7 @@ export const createNewUser = async (
         }
     }
 
-    const [findError, existingUser] = await to(UserModel.findOne({ uid: newUser.uid }).populate('goals'));
+    const [findError, existingUser] = await to(UserModel.findOne({uid: newUser.uid}).populate('goals'));
 
     if (findError || !existingUser) {
         throw new InternalServerErrorException(ErrorMessages.CreateFail);
@@ -80,7 +81,7 @@ export const retrieveUsers = async (): Promise<UserResponseDTO[]> => {
 export const retrieveUserById = async (
     uid: string
 ): Promise<UserResponseDTO> => {
-    const [error, existingUser] = await to(UserModel.findOne({ uid: uid }).populate('goals'));
+    const [error, existingUser] = await to(UserModel.findOne({uid: uid}).populate('goals'));
 
     if (error) {
         throw new InternalServerErrorException(ErrorMessages.GetFail);
@@ -99,10 +100,12 @@ export const updateUser = async (
     userData: Partial<IUser>
 ): Promise<UserResponseDTO> => {
     const [error, updatedUser] = await to(UserModel.findOneAndUpdate(
-        {uid: uid},
-        {$set: {...userData}},
-        {new: true}
-    ).populate('goals'));
+            {uid: uid},
+            {$set: {...userData}},
+            {new: true}
+        )
+            .populate('goals').lean()
+    );
 
     if (!updatedUser) {
         throw new NotFoundException(`User with id: ${uid} was not found!`);
@@ -112,6 +115,55 @@ export const updateUser = async (
         throw new InternalServerErrorException(ErrorMessages.UpdateFail);
     }
 
+    return UserResponseDTO.toResponse(updatedUser);
+};
+
+// PATCH /api/v1/users/:id/goals
+export const updateUserGoals = async (
+    uid: string,
+    goalData: Partial<IGoal>
+): Promise<UserResponseDTO> => {
+    // Step 1: Find the user by uid
+    const [userError, user] = await to(
+        UserModel.findOne({uid}).populate('goals').lean()
+    );
+
+    if (!user) {
+        throw new NotFoundException(`User with id: ${uid} or associated goals not found!`);
+    }
+    if (userError) {
+        throw new InternalServerErrorException(ErrorMessages.UpdateFail);
+    }
+
+    // Step 2: Update the user's existing goal
+    const goalId = user.goals._id;
+    const [goalError, updatedGoal] = await to(
+        GoalModel.findByIdAndUpdate(
+            goalId,
+            {$set: {...goalData}},
+            {new: true}
+        )
+    );
+
+    if (!updatedGoal) {
+        throw new NotFoundException(`Goal with id: ${goalId} was not found!`);
+    }
+    if (goalError) {
+        throw new InternalServerErrorException(ErrorMessages.UpdateFail);
+    }
+
+    const [updatedUserError, updatedUser] = await to(
+        UserModel.findOne({uid}).populate('goals').lean()
+    );
+
+    if (!updatedUser) {
+        throw new NotFoundException(`User with id: ${uid} or associated goals not found!`);
+    }
+    if (updatedUserError) {
+        throw new InternalServerErrorException(ErrorMessages.UpdateFail);
+    }
+
+    // Step 3: Transform and return the updated goal
     return UserResponseDTO.toResponse(updatedUser);
 };
 
