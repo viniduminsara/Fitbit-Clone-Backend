@@ -8,7 +8,7 @@ import {exceptionLogWrapper} from '../shared/helpers/exception-log-wrapper.helpe
 
 const appSetup = async (app: Express) => {
     try {
-        const PORT = Number(process.env.PORT) || 3000;
+        const PORT = Number(process.env.PORT) || 80;
 
         app.listen(PORT, () => {
             cliLoggerService.info(`Server started on port ${PORT}`);
