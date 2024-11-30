@@ -52,7 +52,7 @@ export const createNewUser = async (
         }
     }
 
-    const [findError, existingUser] = await to(UserModel.findOne({uid: newUser.uid}).populate('goals'));
+    const [findError, existingUser] = await to(UserModel.findOne({uid: newUser.uid}).populate('goals').lean());
 
     if (findError || !existingUser) {
         throw new InternalServerErrorException(ErrorMessages.CreateFail);
@@ -81,7 +81,7 @@ export const retrieveUsers = async (): Promise<UserResponseDTO[]> => {
 export const retrieveUserById = async (
     uid: string
 ): Promise<UserResponseDTO> => {
-    const [error, existingUser] = await to(UserModel.findOne({uid: uid}).populate('goals'));
+    const [error, existingUser] = await to(UserModel.findOne({uid: uid}).populate('goals').lean());
 
     if (error) {
         throw new InternalServerErrorException(ErrorMessages.GetFail);

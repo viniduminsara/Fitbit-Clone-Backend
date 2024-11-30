@@ -79,7 +79,7 @@ export const updateMetrics = async (
             },
             { $set: { ...data } },
             { new: true }
-        ).populate('activities')
+        ).populate('activities').lean()
     );
 
     if (error) {
