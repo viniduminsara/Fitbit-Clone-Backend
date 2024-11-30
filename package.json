@@ -1,7 +1,7 @@
 {
-  "name": "express-apivantage",
+  "name": "fitbit-clone-backend",
   "version": "1.0.0",
-  "description": "Express.js Basics and Beyond",
+  "description": "Backend of Fitbit Clone",
   "main": "./dist/app.js",
   "scripts": {
     "build": "tsc",
@@ -15,16 +15,16 @@
   "readmeFilename": "README.md",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Leka-Workshop/Express-APIvantage.git"
+    "url": "https://github.com/viniduminsara/Fitbit-Clone-Backend.git"
   },
   "author": {
-    "name": "Mirza Leka"
+    "name": "Vinidu Minsara"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Leka-Workshop/Express-APIvantage/issues"
+    "url": "https://github.com/viniduminsara/Fitbit-Clone-Backend/issues"
   },
-  "homepage": "https://github.com/Leka-Workshop/Express-APIvantage#readme",
+  "homepage": "https://github.com/viniduminsara/Fitbit-Clone-Backend#readme",
   "dependencies": {
     "await-to-js": "^3.0.0",
     "class-transformer": "^0.5.1",
