@@ -8,7 +8,7 @@
     "postinstall": "npm run build",
     "dev": "nodemon",
     "prestart": "npm run build",
-    "start": "ts-node ./dist/app.js",
+    "start": "node ./dist/app.js",
     "lint": "eslint . --ext .ts",
     "lint-fix": "eslint . --ext .ts --fix"
   },
