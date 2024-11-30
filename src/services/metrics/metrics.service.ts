@@ -15,7 +15,7 @@ export const retrieveMetricsById = async (
 ): Promise<MetricsResponseDTO[]> => {
     try {
         const today = new Date();
-        today.setHours(24, 0, 0, 0);
+        today.setHours(0, 0, 0, 0);
         const sixDaysAgo = new Date(today);
         sixDaysAgo.setDate(today.getDate() - 6);
 
