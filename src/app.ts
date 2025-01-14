@@ -25,3 +25,5 @@ process.on(NodeProcessEvents.UnhandledRejection, (error: unknown) => {
 void appSetup(app);
 securitySetup(app, express);
 routerSetup(app);
+
+export default app;
