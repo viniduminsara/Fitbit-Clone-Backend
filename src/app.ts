@@ -22,8 +22,23 @@ process.on(NodeProcessEvents.UnhandledRejection, (error: unknown) => {
   process.exit(1);
 });
 
-void appSetup(app);
-securitySetup(app, express);
-routerSetup(app);
+// Function to initialize the app
+const initializeApp = async () => {
+  try {
+    // Set up app middlewares and security
+    securitySetup(app, express);
 
-export default app;
+    // Perform application setup (e.g., database connections)
+    await appSetup(app);
+
+    // Set up routes
+    routerSetup(app);
+
+    return app;
+  } catch (error) {
+    exceptionLogWrapper(error, ErrorMessages.AppStartupFail);
+    throw error; // Ensure errors during setup don't go unnoticed
+  }
+};
+
+export default initializeApp();
