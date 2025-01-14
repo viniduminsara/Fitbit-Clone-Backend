@@ -29,15 +29,15 @@ controller
             res.send(updatedMetrics);
         })
     )
-
-    //POST api/v1/metrics/:id/activity
-    .post(
-        '/:uid/activity',
-        saveActivityValidator,
-        asyncHandler(async (req: Request, res: Response) => {
-            await metricsService.saveActivity(req.params.uid, req.body);
-            res.status(201).send('Activity created successfully');
-        })
-    )
+    //
+    // //POST api/v1/metrics/:id/activity
+    // .post(
+    //     '/:uid/activity',
+    //     saveActivityValidator,
+    //     asyncHandler(async (req: Request, res: Response) => {
+    //         await metricsService.saveActivity(req.params.uid, req.body);
+    //         res.status(201).send('Activity created successfully');
+    //     })
+    // )
 
 export default controller;

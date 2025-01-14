@@ -4,6 +4,7 @@ import {exceptionHandler} from '../shared/middlewares/exception-handling.middlew
 import {pageNotFoundExceptionHandler} from '../shared/middlewares/page-not-found-exception-handler.middleware';
 import UsersRouter from '../controllers/user.controller';
 import MetricsController from "../controllers/metrics.controller";
+import ActivityController from "../controllers/activity.controller";
 
 const routerSetup = (app: Express) =>
     app
@@ -15,6 +16,7 @@ const routerSetup = (app: Express) =>
         .use(responseInterceptor)
         .use('/api/v1/users', UsersRouter)
         .use('/api/v1/metrics', MetricsController)
+        .use('/api/v1/activity', ActivityController)
 
         //not found handler
         .use('*', pageNotFoundExceptionHandler)
