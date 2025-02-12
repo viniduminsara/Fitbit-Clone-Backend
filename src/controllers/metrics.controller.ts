@@ -5,6 +5,9 @@ import {
     updateMetricsValidator
 } from "../shared/middlewares/validators/metrics-validator.middleware";
 import * as metricsService from "../services/metrics/metrics.service";
+import {CommonResponseDTO} from "../shared/models/DTO/commonResponseDTO";
+import {SuccessMessages} from "../shared/enums/messages/success-messages.enum";
+import {authenticateUser} from "../shared/middlewares/authentication.middleware";
 
 const controller = Router();
 
@@ -13,20 +16,22 @@ controller
     // GET /api/v1/metrics/:id
     .get(
         '/:uid',
+        authenticateUser,
         getMetricsByIdValidator,
         asyncHandler(async (req: Request, res: Response) => {
-            const existingUser = await metricsService.retrieveMetricsById(req.params.uid);
-            res.send(existingUser);
+            const metrics = await metricsService.retrieveMetricsById(req.params.uid);
+            res.send(new CommonResponseDTO(true, SuccessMessages.GetSuccess, metrics));
         })
     )
 
     //PATCH api/v1/metrics/:id
     .patch(
         '/:uid',
+        authenticateUser,
         updateMetricsValidator,
         asyncHandler(async (req: Request, res: Response) => {
             const updatedMetrics = await metricsService.updateMetrics(req.params.uid, req.body);
-            res.send(updatedMetrics);
+            res.send(new CommonResponseDTO(true, SuccessMessages.UpdateSuccess, updatedMetrics));
         })
     )
     //

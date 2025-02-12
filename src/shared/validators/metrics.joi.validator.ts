@@ -26,7 +26,7 @@ export const updateMetricsValidationSchema = Joi.object({
 
 export const saveActivityValidationSchema = Joi.object({
     activityType: Joi.string()
-        .valid('Walk', 'Run', 'Cycle', 'Swim')
+        .valid('WALK', 'RUN', 'CYCLE', 'HIKE')
         .required()
         .messages({
             'any.required': 'Activity type is required.',

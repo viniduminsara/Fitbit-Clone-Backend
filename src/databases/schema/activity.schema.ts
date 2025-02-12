@@ -5,7 +5,7 @@ const schema = new Schema<IActivity>(
     {
         activityType: {
             type: String,
-            enum: ['Walk', 'Run', 'Cycle', 'Swim'],
+            enum: ['WALK', 'RUN', 'CYCLE', 'HIKE'],
             required: true
         },
         date: {
