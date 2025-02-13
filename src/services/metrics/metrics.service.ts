@@ -8,12 +8,12 @@ import {IMetrics} from "../../databases/model/metrics.model";
 
 // GET /api/v1/users/:id
 export const retrieveMetricsById = async (
-    uid: string
+    uid: string,
+    date: string
 ): Promise<MetricsResponseDTO[]> => {
     try {
-        const today = new Date();
-        today.setHours(24, 0, 0, 0);
-        const sixDaysAgo = new Date(today);
+        const today = new Date(`${date.split('T')[0]}T23:59:59Z`);
+        const sixDaysAgo = new Date(`${date.split('T')[0]}T00:00:00Z`);
         sixDaysAgo.setDate(today.getDate() - 6);
 
         const metrics = await MetricModel.find({

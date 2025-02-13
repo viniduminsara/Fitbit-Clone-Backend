@@ -16,10 +16,9 @@ controller
     // GET /api/v1/metrics/:id
     .get(
         '/:uid',
-        authenticateUser,
         getMetricsByIdValidator,
         asyncHandler(async (req: Request, res: Response) => {
-            const metrics = await metricsService.retrieveMetricsById(req.params.uid);
+            const metrics = await metricsService.retrieveMetricsById(req.params.uid, req.query.date as string);
             res.send(new CommonResponseDTO(true, SuccessMessages.GetSuccess, metrics));
         })
     )

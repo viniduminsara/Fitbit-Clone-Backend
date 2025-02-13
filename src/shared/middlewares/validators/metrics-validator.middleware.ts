@@ -12,6 +12,9 @@ export const getMetricsByIdValidator = asyncHandler(async (
     if (!req.params?.uid)
         throw new BadRequestException('Required parameter "uid" is missing!');
 
+    if (!req.query.date)
+        throw new BadRequestException('Missing request date param!');
+
     next();
 });
 
