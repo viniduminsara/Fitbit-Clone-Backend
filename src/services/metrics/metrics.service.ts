@@ -12,9 +12,14 @@ export const retrieveMetricsById = async (
     date: string
 ): Promise<MetricsResponseDTO[]> => {
     try {
-        const today = new Date(`${date.split('T')[0]}T23:59:59Z`);
-        const sixDaysAgo = new Date(`${date.split('T')[0]}T00:00:00Z`);
-        sixDaysAgo.setDate(today.getDate() - 6);
+        const baseDate = new Date(date);
+        const today = new Date(Date.UTC(baseDate.getUTCFullYear(), baseDate.getUTCMonth(), baseDate.getUTCDate(), 23, 59, 59));
+        const sixDaysAgo = new Date(today);
+        sixDaysAgo.setUTCDate(today.getUTCDate() - 6);
+        sixDaysAgo.setUTCHours(0, 0, 0, 0);
+
+        console.log("Today (UTC):", today.toISOString());
+        console.log("Six days ago (UTC):", sixDaysAgo.toISOString());
 
         const metrics = await MetricModel.find({
             uid,
@@ -27,11 +32,11 @@ export const retrieveMetricsById = async (
         const result: MetricsResponseDTO[] = [];
         for (let i = 0; i < 7; i++) {
             const date = new Date(sixDaysAgo);
-            date.setDate(sixDaysAgo.getDate() + i);
-            date.setHours(0, 0, 0, 0);
+            date.setUTCDate(sixDaysAgo.getUTCDate() + i);
+            date.setUTCHours(0, 0, 0, 0);
 
             const metricForDate = metrics.find(
-                (m) => m.date.toISOString().split('T')[0] === date.toISOString().split('T')[0]
+                (m) => new Date(m.date).toISOString().split('T')[0] === date.toISOString().split('T')[0]
             );
 
             if (metricForDate) {
