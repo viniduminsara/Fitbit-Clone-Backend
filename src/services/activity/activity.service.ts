@@ -92,6 +92,9 @@ export const saveTrackingActivity = async (
 
     // Step 2: Update or create the metric
     if (metric) {
+        metric.steps += savedActivity.activitySteps || 0;
+        metric.distance += savedActivity.activityDistance || 0;
+        metric.caloriesBurned += savedActivity.activityCaloriesBurned || 0;
         metric.activities.push(savedActivity._id);
         await metric.save();
     } else {
